@@ -5,7 +5,9 @@
 #SBATCH --gpus=1
 #SBATCH --constraint=GPU_SKU:H100_SXM5 #constraint required for af3
 #SBATCH --time=0-00:10:00
-#SBATCH --array=1-121%10  # Run 121 jobs, max 10 at a time
+#SBATCH --array=1-121%1  # Run 121 jobs, max 10 at a time
+#SBATCH --output=/scratch/users/rodell/AlphaFold3/AF3/PUS7_RNA/inference_logs/slurm-%A_%a.out
+#SBATCH --error=/scratch/users/rodell/AlphaFold3/AF3/PUS7_RNA/inference_logs/slurm-%A_%a.err
 
 # Base directory for all PUS7_RNA predictions
 BASE_DIR="/scratch/users/rodell/AlphaFold3/AF3/PUS7_RNA"
@@ -35,6 +37,6 @@ singularity run \
      --bind $DB_PATH:/root/public_databases \
  af3.sif \
  --norun_data_pipeline \
- --json_path=/root/af_output/${dir_name}/${dir_name}_data.json \
+ --json_path=/root/af_output/$(echo ${dir_name,,})/${dir_name,,}_data.json \
  --model_dir=/root/models \
  --output_dir=/root/af_output
